@@ -44,7 +44,7 @@ public class UsersDTO {
 		this.username = username;
 	}
 
-	public static UsersDTO toDTO(User user, long roleIDFS, String username) {
+	public static UsersDTO toDTO(User user) {
 		UsersDTO usersdto = new UsersDTO(user.getUserId(), user.getRoleIDFS().getRoleId(), user.getUsername());	
 		return usersdto;
 	}

@@ -3,9 +3,12 @@ package ch.liluna.jokebook.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import ch.liluna.jokebook.domain.Role;
 import ch.liluna.jokebook.repository.RoleRepository;
 
+@Service
 public class RoleService {
 	 private RoleRepository roleRepository;
 

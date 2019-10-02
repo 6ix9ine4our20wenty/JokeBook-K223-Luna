@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.liluna.jokebook.domain.Category;
 import ch.liluna.jokebook.domain.Joke;
+import ch.liluna.jokebook.domain.User;
+import ch.liluna.jokebook.dto.JokeDTO;
+import ch.liluna.jokebook.service.CategoryService;
 import ch.liluna.jokebook.service.JokeService;
 
 @RestController
@@ -23,9 +27,11 @@ import ch.liluna.jokebook.service.JokeService;
 public class JokeController {
 
     private JokeService jokeService;
+    private CategoryService categoryService;
 
-    public JokeController(JokeService jokeService) {
+    public JokeController(JokeService jokeService, CategoryService categoryService) {
         this.jokeService = jokeService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -36,8 +42,12 @@ public class JokeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Joke createJokey(@Valid @RequestBody Joke joke) {
-        return jokeService.createJoke(joke);
+    public JokeDTO createJokey(@Valid @RequestBody JokeDTO jokedto) {
+    	Joke joke = new Joke();
+    	joke.setCategoryIDFS(categoryService.findUserById(jokedto.getCategoryIDFS()).get());
+    	joke.setJokeName(jokedto.getJokeName());
+    	Joke createdJoke = jokeService.createJoke(joke);
+        return JokeDTO.toDTO(createdJoke);
     }
 
     @DeleteMapping("{id}")

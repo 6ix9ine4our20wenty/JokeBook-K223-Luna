@@ -1,5 +1,6 @@
 package ch.liluna.jokebook.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.liluna.jokebook.domain.User;
+import ch.liluna.jokebook.dto.UsersDTO;
+import ch.liluna.jokebook.service.RoleService;
 import ch.liluna.jokebook.service.UserService;
 
 @RestController
@@ -23,29 +26,40 @@ import ch.liluna.jokebook.service.UserService;
 public class UserController {
 
     private UserService userService;
+	private RoleService roleService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
-
+    // DTO Mapping um alle User anzuzeigen
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> getAllUsers() {
-        return userService.findAll();
+    public List<UsersDTO> getAllUsers() {
+    	List<UsersDTO> users = new ArrayList<>();
+    	List<User> dbUsers = userService.findAll();
+    	for(User u : dbUsers) {
+    		users.add(UsersDTO.toDTO(u));
+    	}
+    	return users;
     }
-
+    // User Erstellen mit der Entität User
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Valid @RequestBody User user) {
-        return userService.createUser(user);
+    public UsersDTO createUser(@Valid @RequestBody UsersDTO usersdto) {
+    	User user = new User();
+    	user.setUsername(usersdto.getUsername());
+    	user.setRoleIDFS(roleService.findUserById(usersdto.getRoleIDFS()).orElse(null)); 
+        User createdUser = userService.createUser(user);
+        return UsersDTO.toDTO(createdUser);
     }
-
+    // User Löschen mit der ID
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
     }
-
+    //Update/Edit User mit Fachklasse User und zugehörige ID
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@Valid @RequestBody User user, @PathVariable Long id) {
