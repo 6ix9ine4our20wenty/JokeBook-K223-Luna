@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false)
 	private long roleId;
 	
 	@OneToMany(mappedBy = "roleIDFS")
