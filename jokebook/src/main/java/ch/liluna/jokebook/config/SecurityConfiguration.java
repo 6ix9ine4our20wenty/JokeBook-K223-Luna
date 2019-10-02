@@ -1,10 +1,5 @@
 package ch.liluna.jokebook.config;
 
-import ch.liluna.jokebook.domain.User;
-import ch.liluna.jokebook.filter.JwtAuthenticationFilter;
-import ch.liluna.jokebook.filter.JwtAuthorizationFilter;
-import ch.liluna.jokebook.service.UserService;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +16,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import ch.liluna.jokebook.domain.User;
+import ch.liluna.jokebook.filter.JwtAuthenticationFilter;
+import ch.liluna.jokebook.filter.JwtAuthorizationFilter;
+import ch.liluna.jokebook.service.UserService;
+
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -30,7 +30,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().authorizeRequests().anyRequest().authenticated().and()
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/").permitAll().antMatchers("/joke.html").permitAll()
+		.anyRequest().authenticated().and()
 				.addFilter(new JwtAuthenticationFilter(authenticationManager()))
 				.addFilter(new JwtAuthorizationFilter(authenticationManager())).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

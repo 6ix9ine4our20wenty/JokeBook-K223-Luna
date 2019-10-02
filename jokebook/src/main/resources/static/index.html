@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login des JokesBooks</title>
+</head>
+<body>
+<form action="" style="margin-top: 5px">
+    Username: <input  type="text" name="username" id="username"><br>
+    Password: <input type="password" name="password" id="password"><br>
+    <span style="color: red" id="error"></span>
+
+</form>
+<input type="submit" value="Submit" onclick="loggin()">
+<script>
+    async function loggin() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        const response = await fetch("/login?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), {
+            method: "POST"
+        });
+        if(!response.ok) {
+            document.getElementById("error").innerText = "Wrong username or password";
+            return;
+        }
+        location.href = "/joke.html";
+
+    }
+</script>
+</body>
+</html>

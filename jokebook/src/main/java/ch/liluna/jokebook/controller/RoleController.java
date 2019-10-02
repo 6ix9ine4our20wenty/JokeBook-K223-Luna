@@ -26,19 +26,19 @@ public class RoleController {
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
-
+    // DTO Mapping um alle Role anzuzeigen
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Role> getAllRoles() {
         return roleService.findAll();
     }
-
+ // Role Erstellen mit der Entität Rolle
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Role createRole(@Valid @RequestBody Role role) {
         return roleService.createRole(role);
     }
-
+    // Rolle Löschen anhand der ID
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRole(@PathVariable Long id) {

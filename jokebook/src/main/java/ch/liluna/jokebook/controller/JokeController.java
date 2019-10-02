@@ -1,6 +1,7 @@
 package ch.liluna.jokebook.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import ch.liluna.jokebook.domain.Category;
 import ch.liluna.jokebook.domain.Joke;
 import ch.liluna.jokebook.domain.User;
 import ch.liluna.jokebook.dto.JokeDTO;
+import ch.liluna.jokebook.dto.UsersDTO;
 import ch.liluna.jokebook.service.CategoryService;
 import ch.liluna.jokebook.service.JokeService;
 
@@ -33,13 +35,14 @@ public class JokeController {
         this.jokeService = jokeService;
         this.categoryService = categoryService;
     }
-
+    // DTO Mapping um alle Joke anzuzeigen
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Joke> getAllJokes() {
-        return jokeService.findAll();
+    public List<JokeDTO> getAllJokes() {
+    	//joke -> JokeDTO.toUser(joke)
+        return jokeService.findAll().stream().map(JokeDTO::toDTO).collect(Collectors.toList());
     }
-
+ // Witz Erstellen mit der Entität Witz
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public JokeDTO createJokey(@Valid @RequestBody JokeDTO jokedto) {
@@ -49,13 +52,13 @@ public class JokeController {
     	Joke createdJoke = jokeService.createJoke(joke);
         return JokeDTO.toDTO(createdJoke);
     }
-
+    // Witz Löschen anhand der ID
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteJoke(@PathVariable Long id) {
         jokeService.deleteJokeById(id);
     }
-
+    //Update/Edit Witz mit Fachklasse User und zugehörige ID
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public Joke updateJoke(@Valid @RequestBody Joke joke, @PathVariable Long id) {

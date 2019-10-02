@@ -53,7 +53,7 @@ public class UserController {
         User createdUser = userService.createUser(user);
         return UsersDTO.toDTO(createdUser);
     }
-    // User Löschen mit der ID
+    // User Löschen anhand der ID
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {

@@ -26,19 +26,19 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
-
+    // DTO Mapping um alle Category anzuzeigen
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Category> getAllUsers() {
         return categoryService.findAll();
     }
-
+    // Category Erstellen mit der Entität Category
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Category createCategory(@Valid @RequestBody Category category) {
         return categoryService.createCategory(category);
     }
-
+    // Category Löschen anhand der ID
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Long id) {
